@@ -4,21 +4,20 @@ def meraki_helper(n):
     
     if(n<10):
         print("YES -",n,"is a meraki number")
-        return 1
+        return True
     else:    
      s=str(n)
      l=len(s)
      j=0
      for j in range(0,l-1):
-        z=int(s[j])
-        if(z+1==int(s[j+1]) or z-1==int(s[j+1])):
-            
+        
+        if(abs((int(s[j])-int(s[j+1])))==1):
             continue
         else:
             print("N0 -",n," is not a meraki number")
-            return 0
+            return False
     print("Yes -",n, "is a meraki number")
-    return 1
+    return True
     
 
 list = [12, 14, 56, 78, 98, 54, 678, 134, 789, 0, 7, 5, 123, 45, 76345, 987654321]
