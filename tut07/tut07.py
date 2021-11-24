@@ -1,176 +1,100 @@
 import os
-import pandas as pd
+import csv
+from openpyxl import Workbook
+from openpyxl import load_workbook
 
-dict_main={}
-ltp_dict={}
+print('compiling please wait')
 
-def check(dict_registered,dict_submitted,roll):
-	if roll in dict_registered:
-		temp=dict_registered[roll].copy()
-		s=[]
-		if(len(temp)!=len(dict_submitted)):
-			
-			for i in temp:
-				x=ltp_dict[i]
-	
-				if dict_submitted.count(i)!=x[0][1]:
-					if temp.count(i)!=x[0][1]:
-						diff=x[0][1]-temp.count(i)
-						while diff>0:
-							s.append(i)
-							diff=diff-1
-				s.append(i)
-			
-			for j in dict_submitted:
-				x=ltp_dict[j]
-				if j in s:
-					s.remove(j)
-			e=len(s)		
-			if e!=0:		
-				if roll not in dict_main:
-					dict_main[roll]=[]
-					dict_main[roll].append(s)
-					
-				else:
-					dict_main[roll].append(s)
-					
-				return roll
-	
+def helper(sub_dict_ltp,studinfo_dict,final_result):
+	for roll_no in registered_course:
+		for row in registered_course[roll_no]:
+			codesub = row[2]
+			temp = sub_dict_ltp[codesub]
+			for x in temp:
+				check = False
+				if roll_no in students_feedback:
+					for row1 in students_feedback[roll_no]:
+						if row1[1] == codesub:
+							if int(row1[2]) == int(x):
+								check = True
+								break
+				if check == False:
+					if roll_no not in studinfo_dict:
+						temp2 = [roll_no,row[0],row[1],codesub,'NA_IN_STUDENTINFO','NA_IN_STUDENTINFO','NA_IN_STUDENTINFO','NA_IN_STUDENTINFO']
+						final_result.append(temp2)
+						break
+					else:
+						temp1 = [roll_no,row[0],row[1],codesub,studinfo_dict[roll_no][3],studinfo_dict[roll_no][0],studinfo_dict[roll_no][1],studinfo_dict[roll_no][2]]
+						final_result.append(temp1)
+						
+						break
 
-def number_of_bits(s):
-	    
+def excel_maker(ans,filename):
+	if os.path.isfile(filename):
+		wb = load_workbook(r'course_feedback_remaining.xlsx')
+	else:
+		wb = Workbook()
+	sheet = wb.active
+	lst = ['rollno','register_sem','schedule_sem','subno','Name','email','aemail','contact']
+	sheet.append(lst)
+	for ro in ans:
+		sheet.append(ro)
+	wb.save(filename)
 
-		cnt=0
-		zr=0
-		k=len(s)
-		
-		for j in range(k):
-			if((s[j])=='0'):
-				zr=zr+1
-			
-		cnt=3-zr
-		return cnt
+def dict_2dlist_maker(filename,diction,list_append,var_roll):
+		file= open(filename,'r')  
+		reader = csv.DictReader(file)
+		for row in reader:
+			if row[var_roll] in diction:
+				
+				diction[row[var_roll]].append([row[list_append[0]],row[list_append[1]],row[list_append[2]]])
+			else:
+				
+				diction[row[var_roll]] = []
+				diction[row[var_roll]].append([row[list_append[0]],row[list_append[1]],row[list_append[2]]])
+		file.close()
+		return diction
 
+registered_course = {}
+registered_course=dict_2dlist_maker('course_registered_by_all_students.csv',registered_course,['register_sem','schedule_sem','subno'],'rollno')
+sub_dict_ltp={}
+studinfo_dict = {}
+students_feedback = {}
+students_feedback = dict_2dlist_maker('course_feedback_submitted_by_students.csv',students_feedback,['stud_name','course_code','feedback_type'],'stud_roll')
 
 def feedback_not_submitted():
 
-	
 	ltp_mapping_feedback_type = {1: 'lecture', 2: 'tutorial', 3:'practical'}
-	output_file_name = "course_feedback_remaining.xlsx" 
-	registered_file=pd.read_csv('course_registered_by_all_students.csv')
-	registered_roll=registered_file['rollno'].values.tolist()
-	registered_data=registered_file[['register_sem','schedule_sem','subno']].values.tolist()
-	registered_sub=registered_file['subno'].values.tolist()
-	
-	unique_registered_roll=set(registered_roll)
-	dict_registered={}
-	
-	x=0
-	for k in registered_roll:
-		if k not in dict_registered:
-			dict_registered[k]=[]
-			dict_registered[k].append(registered_sub[x])
-			
-		else:
-			dict_registered[k].append(registered_sub[x])
-			
-		
-		x=x+1
-	
-	c=0
-	registered_data_dict={}
-	for k in registered_sub:
-		registered_data_dict[k]=[]
-		registered_data_dict[k]=registered_data[c]
-		c=c+1
-
-	
-	submitted_file=pd.read_csv("course_feedback_submitted_by_students.csv")
-	submitted_sub=submitted_file['course_code'].values.tolist()
-	submitted_roll=submitted_file['stud_roll'].values.tolist()
-	unique_submitted_roll=set(submitted_file)
-	dict_submitted={}
-
-	d=0
-	for k in submitted_roll:
-		if k not in dict_submitted:
-			dict_submitted[k]=[]
-			dict_submitted[k].append(submitted_sub[d])
-			
-		else:
-			dict_submitted[k].append(submitted_sub[d])
-			
-		d=d+1
-
-	
-	info_file=pd.read_csv('studentinfo.csv')
-	ltp_file=pd.read_csv('course_master_dont_open_in_excel.csv')
-	
-	ltp_list=ltp_file['ltp'].values.tolist()
-	ltp_sub=ltp_file['subno'].values.tolist()
-	
-	
-
-
-	f=0
-	for k in ltp_sub:
-		bits=number_of_bits(ltp_list[f])
-		if k not in ltp_dict:
-			ltp_dict[k]=[]
-			ltp_dict[k].append([ltp_list[f],bits])
-			
-		else:
-			ltp_dict[k].append([ltp_list[f],bits])
-			
-		
-		f=f+1
-	
-	info_list=info_file[['Name','email','aemail','contact']].values.tolist()
-	info_roll=info_file['Roll No'].values.tolist()
-
-	dict_info={}
-
-	g=0
-	for k in info_roll:
-		if k not in dict_info:
-			dict_info[k]=[]
-			dict_info[k].append(info_list[g])
-			
-		else:
-			dict_info[k].append(info_list[g])
-		
-		g=g+1
+	output_file_name = "course_feedback_remaining.xlsx"
 
 
 	
-	for i in unique_registered_roll:
-		if i in dict_submitted:
-			temp=check(dict_registered,dict_submitted[i],i)
-
-
-	
-	
-	output_list=[[]]
-	for i in dict_main:
-		for j in dict_main[i]:
-			
-			
-			for k in j:
-				x=[]
-				x.append(i)
+	file= open('course_master_dont_open_in_excel.csv','r') 
+	reader = csv.DictReader(file)
+	for row in reader:
+		lst = row['ltp'].split('-')
+		lst1 =[]
+		for el in range(len(lst)):
+			if lst[el] !='0':
+				s=el+1
+				lst1.append(s)
 				
-			
-				x.extend(registered_data_dict[k])
-				p=dict_info[i]
-				
-				for l in range(4):
-					x.append(p[0][l])
-				print(x)
-				
-				output_list.append(x)
+		sub_dict_ltp[row['subno']] = lst1
+	file.close()
 	
-	output_data=pd.DataFrame(output_list,columns=['rollno','register_sem','schedule_sem','subno','Name','email','aemail','contact'])
-	output_data.to_excel(output_file_name)
-	print(output_data.head())
+	
+	file= open('studentinfo.csv','r')
+	reader = csv.DictReader(file)
+	for row in reader:
+		studinfo_dict[row['Roll No']] = [row['email'],row['aemail'],row['contact'],row['Name']]
+	file.close()
+
+	final_result = []
+	helper(sub_dict_ltp,studinfo_dict,final_result)
+					
+
+	excel_maker(final_result,output_file_name)
 
 feedback_not_submitted()
+
+print("completed successfully")
