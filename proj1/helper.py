@@ -67,15 +67,7 @@ def generate_marksheet(pos=5,neg=1):
         wb=Workbook()
         sheet=wb.active
         img=Image('iitp_logo.png')
-        alignment_heading=Alignment(horizontal='right',vertical='bottom')
-        alignment_content=Alignment(horizontal='left',vertical='bottom')
-        alignment_ans=Alignment(horizontal='center',vertical='bottom')
-        font_heading=Font(name='Calibri',size=14,bold=False)
-        font_content=Font(name='Calibri',size=14,bold=True)
-        right_color=Font(color='00FF00',name='Calibri',size=14,bold=False)
-        left_color=Font(color='ff0000',name='Calibri',size=14,bold=False)
-        give_color=Font(color='0000FF',name='Calibri',size=14,bold=False)
-        border_style=Side(border_style='medium',color='000000')
+        
         border=Border(top=border_style,bottom=border_style,left=border_style,right=border_style)
         img.width=610
         img.height=80
@@ -183,12 +175,12 @@ def generate_marksheet(pos=5,neg=1):
             
             sheet.cell(row=12,column=2).font=Font(size=12,color="00008000",name="Calibri")
             sheet.cell(row=12,column=2).alignment=Alignment('center')
-            sheet.cell(row=12,column=2).value=str(right*5)
+            sheet.cell(row=12,column=2).value=str(right*pos)
             sheet.cell(row=12,column=2).border=border
 
             sheet.cell(row=12,column=3).font=Font(size=12,color="00FF0000",name="Calibri")
             sheet.cell(row=12,column=3).alignment=Alignment('center')
-            sheet.cell(row=12,column=3).value=str(wrong*(-1))
+            sheet.cell(row=12,column=3).value=str(wrong*neg)
             sheet.cell(row=12,column=3).border=border
 
             sheet.cell(row=12,column=5).font=Font(size=12,name="Calibri",color='000000FF')

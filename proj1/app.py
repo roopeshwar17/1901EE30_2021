@@ -23,6 +23,8 @@ sample_input_path = "./sample_input"
 sample_output_path = "./sample_output"
 crt_marks,wrg_marks = 0,0
 
+app.secret_key=b'Roopeshwar@33333'
+
 @app.route('/marksheet',methods=['GET','POST'])
 def rollno():
     if handle_cases(request):
