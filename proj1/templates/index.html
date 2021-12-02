@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marks Generator App</title>
+    <style>
+        body {
+    background: 	#32d395 url('https://images.unsplash.com/photo-1637946175559-22c4fe13fc54?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHx0b3BpYy1mZWVkfDM0fENEd3V3WEpBYkV3fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=600&q=60');
+    background-position: 1em 1em;
+    color: rgb(94, 4, 19);
+    text-align: center;
+    background-position-x: 0%;
+    background-position-y: 0%;
+}
+
+label {
+    color: #0addaf;
+    font-weight: bold;
+    display:block;
+    margin-bottom: 0em;
+    font-size: 1.2em;
+}
+
+input[type=file] {
+    border: 1px solid #707070;
+    width: 30%;
+    padding: 1em;
+    box-sizing: border-box ;
+    border-radius: .5em;
+    margin-top: 0.2em;
+}
+
+input[type=text] {
+    border: 1px solid #707070;
+    width: 25%;
+    padding: 1em;
+    box-sizing: border-box ;
+    border-radius: .5em;
+    margin-top: 1.2em;
+}
+
+button {
+    border: 0.8px solid #707070;
+    width: 40%;
+    padding: 0.4em;
+    box-sizing: border-box ;
+    border-radius: .4em;
+    margin-top: 1em;
+    margin-bottom: 1%;
+}
+
+.Upload{
+    background: none;
+    border: none;
+    color:white;
+    background-color:#208bd3;
+    font-size: small;
+    padding:0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 0.5rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+
+.generate{
+    background: none;
+    border: none;
+    color:white;
+    background-color: rgb(32, 175, 151); 
+    font-size: small;
+    padding:0.5rem;
+    width: 25%;
+    cursor: pointer;  
+    border-radius: 0.5rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+}
+    </style>
+    
+</head>
+<body>
+    <div class="App">
+        <h1 class="Heading">Marks Generator</h1>
+        <form action="master" method="post" enctype="multipart/form-data">
+            <label for="master">Select master file</label><br><br>
+            <input type="file" id="master" name = "master">
+            <button type="submit" class="Upload">Upload</button><br>
+            {%if data['master_response']=='Uploaded Successfully' %}
+                <p style="color:green;font-size: x-small;">{{data['master_response']}}</p>
+            {%else%}
+                <p style="color: red;font-size: x-small;">{{data['master_response']}}</p>
+            {%endif%}
+            <br>
+        </form>
+        <form action="response" method="post" enctype="multipart/form-data">          
+            <label for="response">Select response file</label><br><br>
+            <input type="file" id="response" name ="response">
+            <button type="submit" class="Upload">Upload</button><br>
+            {%if data['responses_response']=='Uploaded Successfully' %}
+                <p style="color:rgb(151, 5, 139);font-size: x-small;">{{data['responses_response']}}</p>
+            {%else %}
+                <p style="color: red;font-size: x-small;">{{data['responses_response']}}</p>
+            {%endif%}
+            <br>
+        </form>
+        <form action="marksheet" method="post">
+            {%if data['positive_response'] and data['positive_response']=="This field is required" %}
+                <input style="border-color:red;" type="text" placeholder = "Correct option marks" id="positive" name='positive' ><br>
+                <p style="color: red;font-size: x-small;">{{data['positive_response']}}</p><br>
+            {%else%}
+                <input type="text" placeholder = "Correct option marks" id="positive" name='positive'><br>
+            {%endif%}
+            {%if data['negative_response'] and data['negative_response']=="This field is required" %}
+                <input style="border-color:red;"type="text" placeholder = "Wrong option marks"id="negative" name="negative"><br>
+                <p style="color: red;font-size: x-small;">{{data['negative_response']}}</p><br>
+            {%else%}
+                <input type="text" placeholder = "Wrong option marks"id="negative" name="negative"><br>
+            {%endif%}<br>
+            <button type="submit" class="generate">Generate RollNo Wise Marksheet</button><br>
+            {%if data['rollno_response']=='Generated Successfully' %}
+                <p style="color:green;font-size: x-small;">{{data['rollno_response']}}</p><br>
+            {%else %}
+                <p style="color: red;font-size: x-small;">{{data['rollno_response']}}</p><br>
+            {%endif%}<br>
+        </form>
+        <form action="concise" method="post">
+            <button type="submit" class="generate">Generate Concise Marksheet</button><br>
+            {%if data['rollno_response']=='Generated Successfully' %}
+            <p style="color:green;font-size: x-small;">{{data['concise_response']}}</p>
+            {%else %}
+            <p style="color: red;font-size: x-small;">{{data['concise_response']}}</p>
+            {%endif%}<br>
+        </form>
+        <form action="sendemail" method="post">
+            <button type="submit" class="generate">Send Email</button><br>
+            {{data['email_response']}}<br><br> 
+        </form>
+    </div>
+   
+</body>
+</html>

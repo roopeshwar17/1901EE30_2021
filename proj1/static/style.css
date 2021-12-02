@@ -1,0 +1,72 @@
+body {
+    background: 	#32d395 url('background_1.jpg');
+    background-position: 1em 1em;
+    color: rgb(94, 4, 19);
+    text-align: center;
+    background-position-x: 0%;
+    background-position-y: 0%;
+}
+
+label {
+    color: #0addaf;
+    font-weight: bold;
+    display:block;
+    margin-bottom: 0em;
+    font-size: 1.2em;
+}
+
+input[type=file] {
+    border: 1px solid #707070;
+    width: 30%;
+    padding: 1em;
+    box-sizing: border-box ;
+    border-radius: .5em;
+    margin-top: 0.2em;
+}
+
+input[type=text] {
+    border: 1px solid #707070;
+    width: 25%;
+    padding: 1em;
+    box-sizing: border-box ;
+    border-radius: .5em;
+    margin-top: 1.2em;
+}
+
+button {
+    border: 0.8px solid #707070;
+    width: 40%;
+    padding: 0.4em;
+    box-sizing: border-box ;
+    border-radius: .4em;
+    margin-top: 1em;
+    margin-bottom: 1%;
+}
+
+.Upload{
+    background: none;
+    border: none;
+    color:white;
+    background-color:#208bd3;
+    font-size: small;
+    padding:0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 0.5rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+
+.generate{
+    background: none;
+    border: none;
+    color:white;
+    background-color: rgb(32, 175, 151); 
+    font-size: small;
+    padding:0.5rem;
+    width: 25%;
+    cursor: pointer;  
+    border-radius: 0.5rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+}
